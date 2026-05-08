@@ -53,7 +53,7 @@ pipeline {
                         sh "ls -la /usr/bin/ | grep chrome || true"
                         sh "chromedriver --version || true"
                         // Pass the container name as APP_URL to the test suite
-                        sh "APP_URL=http://todo-app-container:5000 mvn clean test -Dwebdriver.chrome.driver=/usr/bin/chromedriver"
+                        sh "APP_URL=http://todo-app-container:5000 mvn clean test -B -ntp -Dwebdriver.chrome.driver=/usr/bin/chromedriver"
                     }
                 }
             }
