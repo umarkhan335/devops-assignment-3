@@ -2,15 +2,16 @@ pipeline {
     agent any
     
     environment {
-        APP_IMAGE = "todo-app:${env.BUILD_ID}"
-        APP_CONTAINER = "todo-app-container-${env.BUILD_ID}"
-        NETWORK = "todo-network-${env.BUILD_ID}"
+        APP_IMAGE = "todo-app:latest"
+        APP_CONTAINER = "todo-app-container"
+        NETWORK = "todo-network"
     }
 
     stages {
         stage('Setup Environment') {
             steps {
                 script {
+                    // Create network if it doesn't exist
                     sh "docker network create ${NETWORK} || true"
                 }
             }
@@ -20,8 +21,16 @@ pipeline {
             steps {
                 dir('app') {
                     script {
+                        // Build the new image
                         sh "docker build -t ${APP_IMAGE} ."
-                        sh "docker run -d --rm --name ${APP_CONTAINER} --network ${NETWORK} ${APP_IMAGE}"
+                        
+                        // Stop and remove any old running container
+                        sh "docker stop ${APP_CONTAINER} || true"
+                        sh "docker rm ${APP_CONTAINER} || true"
+                        
+                        // Run the new container, mapping port 5000 to the host so the instructor can view it
+                        sh "docker run -d --name ${APP_CONTAINER} --network ${NETWORK} -p 5000:5000 ${APP_IMAGE}"
+                        
                         // Wait for the app to initialize
                         sleep 10
                     }
@@ -54,13 +63,9 @@ pipeline {
     }
 
     post {
-        always {
-            script {
-                // Cleanup Docker resources
-                sh "docker stop ${APP_CONTAINER} || true"
-                sh "docker network rm ${NETWORK} || true"
-            }
-        }
+        // NOTICE: We are NOT stopping the app container here anymore.
+        // It will remain running so you can provide the Deployment URL!
+        
         success {
             emailext (
                 subject: "SUCCESS: Build '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
