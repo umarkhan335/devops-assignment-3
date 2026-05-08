@@ -51,6 +51,14 @@ public class AppTest {
         }
     }
 
+    private void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     @Test
     @Order(1)
     public void testLoginPageTitle() {
@@ -81,6 +89,8 @@ public class AppTest {
         assertTrue(driver.getCurrentUrl().contains("/register"));
         
         driver.findElement(By.id("login-link")).click();
+        
+        sleep(1000);
         assertTrue(driver.getCurrentUrl().contains("/login"));
     }
 
@@ -110,6 +120,7 @@ public class AppTest {
         driver.findElement(By.id("password")).sendKeys(PASSWORD);
         driver.findElement(By.id("register-button")).click();
         
+        sleep(1000);
         // Should redirect to login upon success
         assertTrue(driver.getCurrentUrl().contains("/login"));
     }
@@ -134,6 +145,7 @@ public class AppTest {
         driver.findElement(By.id("password")).sendKeys("wrongpassword");
         driver.findElement(By.id("login-button")).click();
         
+        sleep(1000);
         WebElement error = driver.findElement(By.id("error-message"));
         assertEquals("Invalid credentials", error.getText());
     }
@@ -154,6 +166,7 @@ public class AppTest {
         driver.findElement(By.id("new-task")).sendKeys("Buy milk");
         driver.findElement(By.id("add-button")).click();
         
+        sleep(1000);
         List<WebElement> todos = driver.findElements(By.className("todo-item"));
         assertTrue(todos.size() > 0);
         assertTrue(todos.get(todos.size()-1).getText().contains("Buy milk"));
@@ -179,8 +192,10 @@ public class AppTest {
         
         driver.findElement(By.id("new-task")).sendKeys("Task 1");
         driver.findElement(By.id("add-button")).click();
+        sleep(1000);
         driver.findElement(By.id("new-task")).sendKeys("Task 2");
         driver.findElement(By.id("add-button")).click();
+        sleep(1000);
         
         int finalCount = driver.findElements(By.className("todo-item")).size();
         assertEquals(initialCount + 2, finalCount);
@@ -192,6 +207,7 @@ public class AppTest {
         login();
         driver.findElement(By.id("new-task")).sendKeys("Task to delete");
         driver.findElement(By.id("add-button")).click();
+        sleep(1000);
         
         List<WebElement> todos = driver.findElements(By.className("todo-item"));
         int initialCount = todos.size();
@@ -200,6 +216,7 @@ public class AppTest {
         WebElement deleteBtn = todos.get(initialCount - 1).findElement(By.className("delete-button"));
         deleteBtn.click();
         
+        sleep(1000);
         int finalCount = driver.findElements(By.className("todo-item")).size();
         assertEquals(initialCount - 1, finalCount);
     }
@@ -209,6 +226,7 @@ public class AppTest {
     public void testLogout() {
         login();
         driver.findElement(By.id("logout-button")).click();
+        sleep(1000);
         assertTrue(driver.getCurrentUrl().contains("/login"));
         
         // verify cannot access index
@@ -221,5 +239,6 @@ public class AppTest {
         driver.findElement(By.id("username")).sendKeys(uniqueUsername);
         driver.findElement(By.id("password")).sendKeys(PASSWORD);
         driver.findElement(By.id("login-button")).click();
+        sleep(1000);
     }
 }
