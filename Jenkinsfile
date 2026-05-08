@@ -42,7 +42,7 @@ pipeline {
             agent {
                 docker {
                     image 'markhobson/maven-chrome:jdk-11'
-                    args "--network ${NETWORK} -v /dev/shm:/dev/shm"
+                    args "--network ${NETWORK} -v /dev/shm:/dev/shm --entrypoint=''"
                     reuseNode true
                 }
             }
