@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+</head>
+<body>
+    <h2 id="welcome-message">Welcome, {{ username }}!</h2>
+    <form method="POST" action="/logout">
+        <button type="submit" id="logout-button">Logout</button>
+    </form>
+    
+    <h3>Your Todos</h3>
+    <ul id="todo-list">
+        {% for todo in todos %}
+            <li class="todo-item" data-id="{{ todo['id'] }}">
+                {{ todo['task'] }}
+                <form method="POST" action="/delete/{{ todo['id'] }}" style="display:inline;">
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <form method="POST" action="/add">
+        <input type="text" name="task" id="new-task" placeholder="New Task">
+        <button type="submit" id="add-button">Add Task</button>
+    </form>
+</body>
+</html>
