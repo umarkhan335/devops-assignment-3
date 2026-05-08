@@ -29,11 +29,13 @@ public class AppTest {
     @BeforeEach
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        options.addArguments("--headless=new");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--user-data-dir=/tmp/chrome-user-data");
+        options.setBinary("/usr/bin/google-chrome");
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         
