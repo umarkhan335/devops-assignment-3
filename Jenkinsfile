@@ -75,7 +75,7 @@ pipeline {
                 subject: "SUCCESS: Build '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>Build SUCCESS</p>
                          <p>Check the test results and console output at: <a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']]
+                recipientProviders: [developers(), culprits(), requestor()]
             )
         }
         failure {
@@ -84,7 +84,7 @@ pipeline {
                 subject: "FAILED: Build '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>Build FAILED</p>
                          <p>Check the test results and console output at: <a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']]
+                recipientProviders: [developers(), culprits(), requestor()]
             )
         }
     }
