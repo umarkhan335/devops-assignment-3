@@ -42,7 +42,7 @@ pipeline {
             agent {
                 docker {
                     image 'markhobson/maven-chrome:jdk-11'
-                    args "--network ${NETWORK} -v /dev/shm:/dev/shm --entrypoint=''"
+                    args "--network ${NETWORK} -v /dev/shm:/dev/shm --entrypoint='' -u root"
                     reuseNode true
                 }
             }
@@ -50,7 +50,7 @@ pipeline {
                 dir('tests') {
                     script {
                         // Print versions for debugging
-                        sh "google-chrome --version || true"
+                        sh "ls -la /usr/bin/ | grep chrome || true"
                         sh "chromedriver --version || true"
                         // Pass the container name as APP_URL to the test suite
                         sh "APP_URL=http://todo-app-container:5000 mvn clean test -Dwebdriver.chrome.driver=/usr/bin/chromedriver"
