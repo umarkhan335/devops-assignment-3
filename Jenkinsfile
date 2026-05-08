@@ -50,7 +50,7 @@ pipeline {
                 dir('tests') {
                     script {
                         // Pass the container name as APP_URL to the test suite
-                        sh "APP_URL=http://${APP_CONTAINER}:5000 mvn clean test"
+                        sh "APP_URL=http://todo-app-container:5000 mvn clean test -Dwebdriver.chrome.driver=/usr/bin/chromedriver"
                     }
                 }
             }
@@ -68,6 +68,7 @@ pipeline {
         
         success {
             emailext (
+                to: "umarkhan335@gmail.com",
                 subject: "SUCCESS: Build '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>Build SUCCESS</p>
                          <p>Check the test results and console output at: <a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
@@ -76,6 +77,7 @@ pipeline {
         }
         failure {
             emailext (
+                to: "umarkhan335@gmail.com",
                 subject: "FAILED: Build '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>Build FAILED</p>
                          <p>Check the test results and console output at: <a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
